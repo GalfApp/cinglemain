@@ -97,10 +97,6 @@ var settings = {
   "crossDomain": true,
   "url": "http://api.cingleapp.com/contacto",
   "method": "POST",
-  "headers": {
-    "cache-control": "no-cache",
-    "postman-token": "f1af553d-327e-414a-77c8-eca7512f5c7d"
-  },
   "processData": false,
   "contentType": false,
   "mimeType": "multipart/form-data",
