@@ -85,6 +85,32 @@ function onYouTubePlayerAPIReady() {
         }
     });
 }
+$("#enviar").click(function(e){
+  e.preventDefault();  
+  var form = new FormData();
+form.append("opcion", $("#opcion :selected" ).text());
+form.append("email", $("#email" ).val());
+form.append("detalle", $("#detalle" ).val());
+
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://api.cingleapp.com/contacto",
+  "method": "POST",
+  "headers": {
+    "cache-control": "no-cache",
+    "postman-token": "f1af553d-327e-414a-77c8-eca7512f5c7d"
+  },
+  "processData": false,
+  "contentType": false,
+  "mimeType": "multipart/form-data",
+  "data": form
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+});
 
 $(function(){
   $('.fancy').fancySelect();
