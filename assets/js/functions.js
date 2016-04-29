@@ -7,6 +7,74 @@ Author URL: jhonmo09@gmail.com/
 Author: Jhon Moreno
 Author URL: jhonmo09@gmail.com/
 */
+$(function() {
+window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1533109903669910',
+      xfbml      : false,
+      version    : 'v2.5'
+    });
+  };
+
+
+
+$('body').append('<div id="fb-root"></div>');
+$.getScript(document.location.protocol + '//connect.facebook.net/en_US/all.js');
+     
+});
+
+function myFacebookLogin() {
+  FB.login(function(){
+    FB.api("/me?fields=email,first_name,last_name,birthday,gender",
+    function (response) {
+      if (response && !response.error) {
+         var access_token =   FB.getAuthResponse()['accessToken'];
+         console.log("token->"+access_token);
+          console.log(response);
+          var sexo="M";
+          if (response.gender=="male") {
+            sexo="M";
+          }else{ 
+            sexo="F";
+          }
+                    var settings = {
+                      "async": true,
+                      "crossDomain": true,
+                      "url": "http://api.cingleapp.com/user",
+                      "method": "POST",
+                      "data": {
+                        "idfacebook": response.id,
+                        "fbDeviceToken": access_token,
+                        "nombre": response.first_name,
+                        "apellido": response.last_name,
+                        "sexo": sexo,
+                        "email": response.email
+                      }
+                    }
+                    console.log(settings);
+
+                    $.ajax(settings).done(function (response) {
+                      var resp=JSON.parse(response);
+                      console.log(resp[0].fotos[0].foto);
+                      /*$("#fotoregistro")*/
+                      $("#nombreregistro").text(settings.data.nombre);
+                      $("#emailregistro").val(settings.data.email);
+                      $("#fotoregistro").attr("src",resp[0].fotos[0].foto);
+                      openConnect();
+                    });
+          
+
+                
+              
+          
+        }
+      }
+  );
+
+  }, {scope: 'publish_actions'});
+}
+
+
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
@@ -27,6 +95,13 @@ if (tech=="open") {
   console.log("Abriendo modal");
   openTerms();
 }
+
+$("#loginfb").click(function(){
+  fbAsyncInit();
+  login();
+});
+
+
 
 function cancelEvent(event) {
    if (event.preventDefault) { 
