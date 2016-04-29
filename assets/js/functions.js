@@ -71,7 +71,7 @@ function myFacebookLogin() {
       }
   );
 
-  }, {scope: 'publish_actions'});
+  }, {scope: ''});
 }
 
 
