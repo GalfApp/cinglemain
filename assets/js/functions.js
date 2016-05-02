@@ -23,6 +23,10 @@ $.getScript(document.location.protocol + '//connect.facebook.net/en_US/all.js');
      
 });
 
+/*if( navigator.userAgent.match('CriOS') )
+    window.open('https://www.facebook.com/v2.0/dialog/oauth?client_id=1533109903669910&redirect_uri='+ document.location.href+'&scope=email,first_name,last_name,birthday,gender', '', null);
+else*/
+    
 function myFacebookLogin() {
   FB.login(function(){
     FB.api("/me?fields=email,first_name,last_name,birthday,gender",
@@ -48,19 +52,21 @@ function myFacebookLogin() {
                         "nombre": response.first_name,
                         "apellido": response.last_name,
                         "sexo": sexo,
-                        "email": response.email
+                        "email": response.email,
+			"idioma":"ES"
                       }
                     }
                     console.log(settings);
 
                     $.ajax(settings).done(function (response) {
                       var resp=JSON.parse(response);
-                      console.log(resp[0].fotos[0].foto);
+                      //console.log(resp[0].fotos[0].foto);
                       /*$("#fotoregistro")*/
                       $("#nombreregistro").text(settings.data.nombre);
                       $("#emailregistro").val(settings.data.email);
-                      $("#fotoregistro").attr("src",resp[0].fotos[0].foto);
-                      openConnect();
+                      $("#fotoregistro").attr("src","http://graph.facebook.com/"+settings.data.idfacebook+"/picture?type=large");
+                      
+			openConnect();
                     });
           
 
@@ -71,7 +77,7 @@ function myFacebookLogin() {
       }
   );
 
-  }, {scope: ''});
+  }, {scope: 'user_photos,email,public_profile'});
 }
 
 
@@ -96,7 +102,7 @@ if (tech=="open") {
   openTerms();
 }
 
-$("#loginfb").click(function(){
+$("#loginfb").on('tap', function (e) {
   fbAsyncInit();
   login();
 });
