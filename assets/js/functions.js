@@ -2,6 +2,12 @@
 Author: Duvan Vargas
 Author URL: davs3029@gmail.com/
 */
+var userLang = navigator.language || navigator.userLanguage; 
+ var substring="es.html";
+ var web=(document.location.href.indexOf(substring) > -1);
+ if (userLang!='en-US'&&web) {
+  window.location.href = "es.html";
+ }
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),

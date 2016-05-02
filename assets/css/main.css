@@ -256,12 +256,3 @@ footer p{opacity: 0.4; font-size: 12px; padding-top: 5px;}
 	.phone{-webkit-transform:scale(0.34,0.34); transform:scale(0.34,0.34); transform-origin: bottom; -webkit-transform-origin: bottom;}
 }
 
-@media (orientation: landscape) {
-  body {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-  }
-}
