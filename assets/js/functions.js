@@ -1,12 +1,21 @@
 /*
-Author: Jhon Moreno
-Author URL: jhonmo09@gmail.com/
+Author: Duvan Vargas
+Author URL: davs3029@gmail.com/
 */
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
 
-/*
-Author: Jhon Moreno
-Author URL: jhonmo09@gmail.com/
-*/
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
 $(function() {
 window.fbAsyncInit = function() {
     FB.init({
@@ -20,18 +29,86 @@ window.fbAsyncInit = function() {
 
 $('body').append('<div id="fb-root"></div>');
 $.getScript(document.location.protocol + '//connect.facebook.net/en_US/all.js');
-     
-});
-
-/*if( navigator.userAgent.match('CriOS') )
-    window.open('https://www.facebook.com/v2.0/dialog/oauth?client_id=1533109903669910&redirect_uri='+ document.location.href+'&scope=email,first_name,last_name,birthday,gender', '', null);
-else*/
     
+}
+
+);
+var fbioslogin = getUrlParameter('code');
+if (!fbioslogin=="") {
+  loginIOS();
+}
+function loginIOS(){
+
+  
+  
+  
+  var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://graph.facebook.com/v2.5/oauth/access_token?client_id=1533109903669910&code="+fbioslogin+"&client_secret=0be6f981d89e405a6d9a3e9f3bf45a51"+"&redirect_uri="+ document.location.href,
+  "method": "GET"
+  
+    }
+
+    $.ajax(settings).done(function (response) {
+      console.log(response.access_token);
+      var tokenios=response.access_token;
+      var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://graph.facebook.com/v2.6/me?fields=email,first_name,last_name,birthday,gender&access_token="+tokenios,
+        "method": "GET"
+      }
+
+      $.ajax(settings).done(function (response) {
+        console.log(response);
+        var sexo="M";
+          if (response.gender=="male") {
+            sexo="M";
+          }else{ 
+            sexo="F";
+          }
+          var settings = {
+                              "async": true,
+                              "crossDomain": true,
+                              "url": "http://api.cingleapp.com/user",
+                              "method": "POST",
+                              "data": {
+                                "idfacebook": response.id,
+                                "fbDeviceToken": response.access_token,
+                                "nombre": response.first_name,
+                                "apellido": response.last_name,
+                                "sexo": sexo,
+                                "email": response.email,
+                                "idioma":"ES"
+                              }
+                            }
+                            console.log(settings);
+
+                            $.ajax(settings).done(function (response) {
+                              var resp=JSON.parse(response);
+                              //console.log(resp[0].fotos[0].foto);
+                              $("#fotoregistro")
+                              $("#nombreregistro").text(settings.data.nombre);
+                              $("#emailregistro").val(settings.data.email);
+                              $("#fotoregistro").attr("src","http://graph.facebook.com/"+settings.data.idfacebook+"/picture?type=large");
+                              openConnect();
+                            }); 
+      });
+      
+    });
+}
+
 function myFacebookLogin() {
+
+if( navigator.userAgent.match('CriOS') )
+    window.open('https://www.facebook.com/v2.5/dialog/oauth?client_id=1533109903669910&redirect_uri='+ document.location.href+'&scope=email,public_profile,user_birthday', '', null);
+else{
+  
   FB.login(function(){
     FB.api("/me?fields=email,first_name,last_name,birthday,gender",
-    function (response) {
-      if (response && !response.error) {
+      function (response) {
+        if (response && !response.error) {
          var access_token =   FB.getAuthResponse()['accessToken'];
          console.log("token->"+access_token);
           console.log(response);
@@ -53,7 +130,7 @@ function myFacebookLogin() {
                         "apellido": response.last_name,
                         "sexo": sexo,
                         "email": response.email,
-			"idioma":"ES"
+			                   "idioma":"ES"
                       }
                     }
                     console.log(settings);
@@ -66,7 +143,7 @@ function myFacebookLogin() {
                       $("#emailregistro").val(settings.data.email);
                       $("#fotoregistro").attr("src","http://graph.facebook.com/"+settings.data.idfacebook+"/picture?type=large");
                       
-			openConnect();
+			                 openConnect();
                     });
           
 
@@ -79,22 +156,10 @@ function myFacebookLogin() {
 
   }, {scope: 'user_photos,email,public_profile'});
 }
+}
 
 
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
 
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-};
 var tech = getUrlParameter('terms');
 if (tech=="open") {
   //Abrir modal de terminos
@@ -102,10 +167,10 @@ if (tech=="open") {
   openTerms();
 }
 
-$("#loginfb").on('tap', function (e) {
+/*$("#loginfb").on('tap', function (e) {
   fbAsyncInit();
   login();
-});
+});*/
 
 
 
