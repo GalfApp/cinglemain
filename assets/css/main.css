@@ -256,3 +256,6 @@ footer p{opacity: 0.4; font-size: 12px; padding-top: 5px;}
 	.phone{-webkit-transform:scale(0.34,0.34); transform:scale(0.34,0.34); transform-origin: bottom; -webkit-transform-origin: bottom;}
 }
 
+button#enviar:hover {
+    background-color: rgba(249, 96, 101, 0.59);
+}

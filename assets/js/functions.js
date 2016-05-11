@@ -258,6 +258,7 @@ var settings = {
 
 $.ajax(settings).done(function (response) {
   console.log(response);
+  $('.modal').fadeOut(350);
 });
 });
 
